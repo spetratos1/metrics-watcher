@@ -9,6 +9,7 @@ import (
 
 	dto "github.com/prometheus/client_model/go"
 	"github.com/prometheus/common/expfmt"
+	"github.com/prometheus/common/model"
 )
 
 // Collector scrapes one Prometheus-format endpoint. It satisfies
@@ -47,7 +48,7 @@ func (c *Collector) Collect(ctx context.Context) error {
 		return fmt.Errorf("target returned status %d", resp.StatusCode)
 	}
 
-	var parser expfmt.TextParser
+	parser := expfmt.NewTextParser(model.LegacyValidation)
 	families, err := parser.TextToMetricFamilies(resp.Body)
 	if err != nil {
 		return fmt.Errorf("parsing metrics: %w", err)

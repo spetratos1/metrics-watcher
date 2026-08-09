@@ -13,6 +13,7 @@ import (
 type Config struct {
 	Server ServerConfig `yaml:"server"`
 	Scrape ScrapeConfig `yaml:"scrape"`
+	TFE    TFEConfig    `yaml:"tfe"`
 }
 
 type ServerConfig struct {
@@ -22,6 +23,13 @@ type ServerConfig struct {
 type ScrapeConfig struct {
 	Interval Duration `yaml:"interval"`
 	Targets  []Target `yaml:"targets"`
+}
+
+type TFEConfig struct {
+	Enabled      bool     `yaml:"enabled"`
+	Address      string   `yaml:"address"`
+	Organization string   `yaml:"organization"`
+	Interval     Duration `yaml:"interval"`
 }
 
 type Target struct {
@@ -74,6 +82,17 @@ func (c *Config) applyDefaultsAndValidate() error {
 		}
 		if _, err := url.ParseRequestURI(t.URL); err != nil {
 			return fmt.Errorf("scrape target %q: invalid url %q: %w", t.Name, t.URL, err)
+		}
+	}
+	if c.TFE.Enabled {
+		if c.TFE.Interval == 0 {
+			c.TFE.Interval = Duration(30 * time.Second)
+		}
+		if _, err := url.ParseRequestURI(c.TFE.Address); err != nil {
+			return fmt.Errorf("tfe: invalid address %q: %w", c.TFE.Address, err)
+		}
+		if c.TFE.Organization == "" {
+			return fmt.Errorf("tfe: organization is required when enabled")
 		}
 	}
 	return nil
