@@ -187,6 +187,25 @@ curl http://localhost:YOUR_PORT/metrics
 go test ./...
 ```
 
+Testing
+
+The codebase uses table-driven tests for systematic coverage. Key test files:
+
+- `internal/config/config_test.go`
+  - Tests the configuration loader (`Load()` function) using table-driven tests.
+  - Verifies defaults are applied (e.g., `:2112` for server addr, `15s` for scrape interval).
+  - Verifies explicit YAML values override defaults.
+  - Validates error handling: missing target name, malformed URL, unparseable duration,
+    TFE enabled without organization.
+  - Uses `t.TempDir()` for isolated temp files (no cleanup burden) and `t.Helper()` to
+    keep error reports pointing at the test case, not the helper.
+
+When adding new collectors or config options:
+- Add test cases to `internal/config/config_test.go` covering both valid and invalid inputs.
+- Use table-driven pattern: add a new struct to the `tests` slice with input YAML and
+  expected outcomes.
+- Collector unit tests (if added) should follow the same pattern.
+
 Patterns and conventions to follow
 
 - **Register instruments during construction**: see `uptime.New()` and `tfe.New()`.
