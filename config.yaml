@@ -1,0 +1,8 @@
+server:
+  addr: ":2112"
+
+scrape:
+  interval: "10s"
+  targets:
+    - name: "demo"
+      url: "http://localhost:8000/sample_metrics.txt"
