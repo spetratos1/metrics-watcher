@@ -1,14 +1,1 @@
-server:
-  addr: ":2112"
 
-scrape:
-  interval: "10s"
-  targets:
-    - name: "demo"
-      url: "http://localhost:8000/sample_metrics.txt"
-
-tfe:
-  enabled: true
-  address: "http://localhost:8080"
-  organization: "demo-org"
-  interval: "15s"
