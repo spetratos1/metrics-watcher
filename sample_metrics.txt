@@ -1,6 +1,0 @@
-# HELP demo_temperature_celsius Simulated node temperature.
-# TYPE demo_temperature_celsius gauge
-demo_temperature_celsius 21.5
-# HELP demo_requests_total Simulated request counter.
-# TYPE demo_requests_total counter
-demo_requests_total 42
